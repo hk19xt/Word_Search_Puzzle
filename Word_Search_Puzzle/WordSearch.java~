@@ -1,0 +1,292 @@
+package Assign_1;
+
+import BasicIO.*;                // for IO classes
+import static BasicIO.Formats.*; // for field formats
+import static java.lang.Math.*;  // for math constants and functions
+
+
+/** This class ...
+  *
+  * @author Hyejin Kim
+  * @student# 6823116
+  * @version 1.0 (1/31/2020)                                                        */
+
+public class WordSearch {
+  
+  
+  // instance variables
+  private ASCIIDataFile pData;
+  private ASCIIDisplayer display;
+  private char[][] puzzle;
+  private String word;
+  
+  
+  /** This constructor ...                                                     */
+  
+  public WordSearch () {
+    
+    // local variables
+    pData = new ASCIIDataFile();
+    display = new ASCIIDisplayer(35,70);
+    loadPuzzle();
+    displayPuzzle();
+    
+    for( ; ; ){
+      
+      word = pData.readString();
+      if(pData.isEOF())break;
+     //display.writeLine(word);
+      System.out.println(word);
+     findWord();
+    }
+    
+    pData.close();
+    display.close();
+  }
+  // statements
+  // constructor
+  
+  
+  // methods
+  private void loadPuzzle(){
+    puzzle = new char[18][18];
+    pData.readLine();
+    for(int i=0; i<puzzle.length; i++){
+      for(int j=0;j<puzzle[i].length;j++){
+        puzzle[i][j]=pData.readChar();
+        
+      }
+    }
+  }
+  
+  private void displayPuzzle(){
+    for(int i=0; i<puzzle.length; i++){
+      for(int j=0;j<puzzle[i].length;j++){
+        display.writeChar(puzzle[i][j]);
+      }
+      display.newLine();
+    }
+    display.newLine();
+  }
+  
+  private boolean searchDown(int x, int y, String word){
+    char[]charArray = word.toCharArray();
+    
+//    if(x+charArray.length>puzzle.length)
+//      return false;
+    
+    int index = x;
+    for(char letter:charArray){
+      if(!checkBoundary(index, y))
+        return false;
+      if(puzzle[index][y]!=letter){
+       // System.out.println(letter + "   " + puzzle[y][index] + "   " +index + "  " + y);
+        return false;
+    }
+      index++;
+    }  
+    
+    return true;
+  }
+  private boolean searchUp(int x, int y, String word){
+    
+     char[]charArray = word.toCharArray();
+    
+//    if((x+1)-charArray.length<0)
+//      return false;
+    
+    int index = x;
+    for(char letter: charArray){
+      if(!checkBoundary(index, y))
+        return false;
+      if(puzzle[index][y]!=letter){
+        //System.out.println(letter + "   " + puzzle[index][y] + "   " +index + "  " + y);
+        return false;
+       
+      }
+       index--;
+    }  
+    
+    return true;
+  }
+  private boolean searchLeft(int x, int y, String word){
+    
+    char[]charArray = word.toCharArray();
+    
+//    if((y+1)-charArray.length<0)
+//      
+//      return false;
+    
+    int index = y;
+    for(char letter: charArray){
+      if(!checkBoundary(x, index))
+        return false;
+      if(puzzle[x][index]!=letter)
+        return false;
+     // System.out.println(letter + "   " + puzzle[y][index] + "   " +index + "  " + y);
+      index--;
+      
+    }  
+    
+    return true;
+   
+  }
+  private boolean searchRight(int x, int y, String word){
+    
+    
+    char[]charArray = word.toCharArray();
+    
+//    if((x+1)-charArray.length<0)
+//      return false;
+    
+    int index = y;
+    for(char letter: charArray){
+      if(!checkBoundary(x,index))
+        return false;
+      if(puzzle[x][index]!=letter){
+        //System.out.println(letter + "   " + puzzle[x][index] + "   " +index + "  " +y );
+        return false;
+    }
+      index++;
+      
+    }  
+    
+    return true;
+  }
+  private boolean searchRightDown(int x, int y, String word){
+    
+    
+    char[]charArray = word.toCharArray();
+    
+//    if((y+1)-charArray.length<0||x+charArray.length>puzzle[y].length)
+//      return false;
+    
+    int indexX = x, indexY = y;
+    for(char letter: charArray){
+      if(!checkBoundary(indexX, indexY))
+        return false;
+      if(puzzle[indexX][indexY]!=letter)
+        return false;
+      indexX++;
+      indexY++;
+      
+    }  
+    
+    return true;
+  }
+  private boolean searchRightUp(int x, int y, String word){
+    
+    
+    char[]charArray = word.toCharArray();
+    
+//    if(y+charArray.length>puzzle.length||charArray.length>puzzle[y].length)
+//      return false;
+    
+    int indexX = x, indexY=y;
+    for(char letter: charArray){
+      if(!checkBoundary(indexX, indexY))
+        return false;
+      if(puzzle[indexX][indexY]!=letter)
+        return false;
+      
+      indexX--;
+      indexY++;
+      
+    }  
+    
+    return true;
+  }
+  private boolean searchLeftUp(int x, int y, String word){
+    
+    
+    char[]charArray = word.toCharArray();
+    
+//    if((y+1)-charArray.length<0||(x+1)-charArray.length<0)
+//      return false;
+    
+    int indexX = x, indexY = y;
+    for(char letter: charArray){
+      if(!checkBoundary(indexX, indexY))
+        return false;
+      if(puzzle[indexX][indexY]!=letter)
+        return false;
+      
+      indexX--;
+      indexY--;
+      
+    }  
+    
+    return true;
+  }
+  private boolean searchLeftDown(int x, int y, String word){
+    
+    
+    char[]charArray = word.toCharArray();
+    
+//    if(y+charArray.length>puzzle[y].length||(x+1)-charArray.length<0)
+//      return false;
+    
+    int indexX = x, indexY = y;
+    for(char letter: charArray){
+      if(!checkBoundary(indexX, indexY))
+        return false;
+      if(puzzle[indexX][indexY]!=letter)
+        return false;
+      
+      indexX++;
+      indexY--;
+      
+    }  
+    
+    return true;
+  }
+  
+  private void findWord(){
+
+    for(int x=0;x<puzzle.length;x++){
+      for(int y=0;y<puzzle[0].length;y++){
+//        if(x==17 || y==17)
+//          System.out.println("x="+x+" y="+y);
+        if(searchLeft(x,y,word)){
+          display.writeLine(word + " found (left) at (" + x +" ," + y + ")");} 
+        
+        if(searchDown(x,y,word)){
+          display.writeLine(word + " found (down) at (" + x +" ," + y + ")");}  
+       
+        if(searchRight(x,y,word)){
+          display.writeLine(word + " found (right) at (" + x +" ," + y + ")");}
+       
+        if(searchUp(x,y,word)){
+          display.writeLine(word + " found (up) at (" + x +" ," + y + ")"); } 
+       
+        if(searchLeftUp(x,y,word)){
+          display.writeLine(word + " found (leftup) at (" + x +" ," + y + ")");}        
+        
+        if(searchRightUp(x,y,word)){
+          display.writeLine(word + " found (rightup) at (" + x +" ," + y + ")");}        
+        
+        if(searchLeftDown(x,y,word)){
+          display.writeLine(word + " found (leftdown) at (" + x +" ," + y + ")");}        
+       
+        if(searchRightDown(x,y,word)){
+          display.writeLine(word + " found (rightdown) at (" + x +" ," + y + ")");}
+          
+        }
+        
+      }
+      
+    }
+    
+  private boolean checkBoundary(int x, int y){
+    if(x<0 || y<0 || x>=puzzle.length || y >= puzzle[0].length)
+      return false;
+    return true;
+  }
+  
+  
+  
+  // For main classes only:
+  public static void main ( String[] args ) { WordSearch c = new WordSearch(); };
+  
+  
+} // <className>
