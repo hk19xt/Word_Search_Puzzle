@@ -21,13 +21,13 @@ public class WordSearch {
   private String word;
   
   
-  /** This constructor ...                                                     */
-  
   public WordSearch () {
     
+   /*This constructor is to input a text file through ASCIDataFile to represent a 2-D array in the grid display.*/
+   
     // local variables
     pData = new ASCIIDataFile();
-    display = new ASCIIDisplayer(35,70);
+    display = new ASCIIDisplayer(35,70); //The display for grid size is 35*70.
     loadPuzzle();
     displayPuzzle();
     
